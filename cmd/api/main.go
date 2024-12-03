@@ -10,6 +10,7 @@ import (
 	"os"
 	"time"
 
+	_ "github.com/joho/godotenv/autoload"
 	_ "github.com/lib/pq"
 	"greenlight.reandov.dev/internal/data"
 )

@@ -1,10 +1,15 @@
-version: '3.9'
 services:
   postgres:
-    image: postgres:13
-    ports:
-      - 5434:5432
+    image: postgres:15
+    restart: unless-stopped
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123
-      POSTGRES_DB: greenlight
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "${DB_PORT}:5432"
+    volumes:
+      - storage:/var/lib/postgresql/data
+
+volumes:
+  storage:
