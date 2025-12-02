@@ -26,7 +26,7 @@ type User struct {
 	Email     string    `json:"email"`
 	Password  password  `json:"-"`
 	Activated bool      `json:"activated"`
-	Version   int       `json:"version"`
+	Version   int       `json:"-"`
 }
 
 type UserModel struct {
@@ -87,7 +87,7 @@ func ValidateUser(v *validator.Validator, user *User) {
 
 func (m UserModel) Insert(user *User) error {
 	query := `
-			INSER INTO users (name, email, password_hash, activated)
+			INSERT INTO users (name, email, password_hash, activated)
 			VALUES ($1, $2, $3, $4)
 			RETURNING id, created_at, version`
 
@@ -99,7 +99,7 @@ func (m UserModel) Insert(user *User) error {
 	err := m.DB.QueryRowContext(ctx, query, args...).Scan(&user.ID, &user.CreatedAt, &user.Version)
 	if err != nil {
 		switch {
-		case err.Error() == `pq: duplicate key value violates unique constraint "users_email_key`:
+		case err.Error() == `pq: duplicate key value violates unique constraint "users_email_key"`:
 			return ErrDuplicateEmail
 		default:
 			return err
